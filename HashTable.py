@@ -32,7 +32,6 @@ def collision_resolver(key, oldAddress, size): #returns integer (Address)
     offset = abs( offset // size)
     return ((offset + oldAddress)% size)
 
-
 def put(hashtable,key, data,size): #return hashtable,size
     if loadFactor > 75:
        resize_hashtable(hashtable,size,True)
@@ -40,17 +39,12 @@ def put(hashtable,key, data,size): #return hashtable,size
         resize_hashtable(hashtable,size,False)
 
     address = hash_function(key,size)
-    while hashtable[0][address] != None:
+    while hashtable[0][address] != None or hashtable[0][address] != "#":
         address = collision_resolver(key,address,size)
     hashtable[0][address] = key
     hashtable[1][address] = data
 
     return (hashtable,size)
-
-    
-
-
-
 
 def loadFactor(hashtable,size): # returns a float - Loadfactor of hashtable
     num_elements = sum(1 for _ in filter(None, hashtable[0]))
@@ -60,14 +54,38 @@ def loadFactor(hashtable,size): # returns a float - Loadfactor of hashtable
     return load_factor
 
 def Update(hashtable,key, columnName, data,size,collision_path,opNumber): # returns Nothing, prints 'record Updated'
-    pass
-        
-    
+    for index in range(len(hashtable[0])):
+        if hashtable[0][index] == key:
+            update_address = index
+            break
+    dictionary = hashtable[1][update_address]
+    for keys in dictionary:
+        if keys == columnName:
+            dictionary[keys] = data 
+            print('record Updated')
+    return
+     
 def get(hashtable,key,size,collision_path,opNumber): # returns dictionary
-    pass
+    for index in range(len(hashtable[0])):
+        if hashtable[0][index] == key:
+            found_address = index
+            return hashtable[1][found_address]
+            
+    
+    return "Item not found"
         
 def delete(hashtable, key, size,collision_path,opNumber): #returns hashtable, size, prints a msg  'Item Deleted'
-   pass
+   for index in range(len(hashtable[0])):
+        if hashtable[0][index] == key:
+             hashtable[0][index] = "#"
+             print('Item Deleted')
+             break
+   for number in collision_path:
+       if number == opNumber:
+           for i in range(len( collision_path[number])):
+               if collision_path[number][i] == key:
+                   del collision_path[number][i]
+   return (hashtable, size)
 
 def is_prime(n):
     if n <= 1:
