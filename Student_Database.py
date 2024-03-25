@@ -5,6 +5,7 @@ def create_studentDatabase(studentRecords):
     for i in range(len(studentRecords)):
         hashtable[0][i] = studentRecords[i]["ID"]
         hashtable[1][i] = studentRecords[i]
+    return hashtable
 
 def perform_Operations(H, operationFile):
      pass
@@ -21,9 +22,9 @@ def main(filename):
         line = line.strip () # remove leading and trailing spaces
         tokens = line.split () # split the line into tokens
         input.append ( tokens [0]) # add the first token to the input list
-    print (input)
-    print ()
+
     flst = []
+
     for i in range (1):
         dictionary = {}
         lst = input[i].split (',')
@@ -31,17 +32,13 @@ def main(filename):
             dictionary.update( {lst[j] : None})
     
     for i in range(1,8):
-        x = dictionary.copy()
+        copy_of_dict = dictionary.copy()
         temp = input[i].split (',')
         index = 0
         for key in dictionary:
-            x[key] = temp[index]
+            copy_of_dict[key] = temp[index]
             index += 1
-        flst.append(x)
-
-    print(flst)
-
-
+        flst.append(copy_of_dict)
     return flst
 
 
@@ -49,5 +46,6 @@ def main(filename):
 
 
 studentRecords=main('data.csv')
-# H = create_studentDatabase(studentRecords)
-# print(perform_Operations(H, 'Operations.txt'))
+H = create_studentDatabase(studentRecords)
+print(H)
+print(perform_Operations(H, 'Operations.txt'))

@@ -4,17 +4,18 @@ def create_hashtable(size): # returns tuple(list,list)
 def resize_hashtable(hashtable,size,increase): #return hashtable,size
     if increase == True:
         size = size*2
-        size = is_prime(size)
-        hashtable[0].extend([None]*size)
-        hashtable[1].extend([None]*size)
-        return (hashtable,size)
-
+        size = next_prime(size)
+        table = [None for i in range(size)]
     else:
         size = size//2
         size = is_prime(size)
-        hashtable[0][:size]
-        hashtable[1][:size]
-        return (hashtable,size)
+        table = [None for i in range(size)]
+    for i in range(len(hashtable[0])):
+        if hashtable[0][i] != None:
+            put(table,hashtable[0][i],hashtable[1][i],size)
+    return (table,size)
+
+       
 
 def hash_function(key,size): #returns integer (Address)
     hash_value = 0
@@ -32,7 +33,7 @@ def collision_resolver(key, oldAddress, size): #returns integer (Address)
     offset = abs( offset // size)
     return ((offset + oldAddress)% size)
 
-def put(hashtable,key, data,size): #return hashtable,size
+def put(hashtable, key, data, size): #return hashtable,size
     if loadFactor > 75:
        resize_hashtable(hashtable,size,True)
     elif loadFactor < 30:
