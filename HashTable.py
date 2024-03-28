@@ -2,17 +2,28 @@ def create_hashtable(size): # returns tuple(list,list)
     return ([None]*size, [None]*size)
 
 def resize_hashtable(hashtable,size,increase): #return hashtable,size
+    
     if increase == True:
         size = size*2
         size = next_prime(size)
-        table = [None for i in range(size)]
-    else:
-        size = size//2
-        size = is_prime(size)
-        table = [None for i in range(size)]
+        table = create_hashtable(size)
+    elif increase == False:
+        if size == 7:
+            return (hashtable,size)
+        else: 
+            if size // 2 > 7:
+                size = size // 2
+            else:
+                size = 7
+
+            size = next_prime(size)
+            table = create_hashtable(size)
+    
     for i in range(len(hashtable[0])):
         if hashtable[0][i] != None:
             put(table,hashtable[0][i],hashtable[1][i],size)
+            
+    
     return (table,size)
 
        
@@ -28,65 +39,96 @@ def hash_function(key,size): #returns integer (Address)
 def collision_resolver(key, oldAddress, size): #returns integer (Address)
     offset = 0
     for character in key:
-        offset += ord(character)
+        offset += abs(ord(character))
     
     offset = abs( offset // size)
-    return ((offset + oldAddress)% size)
+    offset = (offset + oldAddress)% size
+    return offset
 
 def put(hashtable, key, data, size): #return hashtable,size
-    if loadFactor > 75:
-       resize_hashtable(hashtable,size,True)
-    elif loadFactor < 30:
-        resize_hashtable(hashtable,size,False)
-
     address = hash_function(key,size)
-    while hashtable[0][address] != None or hashtable[0][address] != "#":
+    while hashtable[0][address] != None and hashtable[0][address] != "#":
         address = collision_resolver(key,address,size)
     hashtable[0][address] = key
     hashtable[1][address] = data
 
-    return (hashtable,size)
+    loadfctr = loadFactor(hashtable, size)
+    if loadfctr > 0.75:
+       hashtable, size = resize_hashtable(hashtable,size,True)
+    elif loadfctr < 0.3 and size > 7:
+        hashtable, size = resize_hashtable(hashtable,size,False)
+
+    return hashtable,size
 
 def loadFactor(hashtable,size): # returns a float - Loadfactor of hashtable
-    num_elements = sum(1 for _ in filter(None, hashtable[0]))
-
+    num_elements = 0
+    for i in range(size):
+        if hashtable[0][i] is not None and hashtable[0][i] != "#":
+            num_elements += 1
+    
     load_factor = num_elements / size
+   
 
     return load_factor
 
-def Update(hashtable,key, columnName, data,size,collision_path,opNumber): # returns Nothing, prints 'record Updated'
-    for index in range(len(hashtable[0])):
-        if hashtable[0][index] == key:
-            update_address = index
-            break
-    dictionary = hashtable[1][update_address]
-    for keys in dictionary:
-        if keys == columnName:
-            dictionary[keys] = data 
-            print('record Updated')
+def Update(hashtable,key, columnName, data ,size,collision_path,opNumber): # returns Nothing, prints 'record Updated'
+    address = hash_function(key, size)
+
+    while hashtable[0][address] != key and hashtable[0][address] != None and hashtable[0][address] != "#":
+        collision_path[opNumber].append(address)
+        address = collision_resolver(key,address,size)
+    
+    collision_path[opNumber].append(address)
+    hashtable[1][address][columnName] = data
+    print('record Updated')
     return
      
 def get(hashtable,key,size,collision_path,opNumber): # returns dictionary
-    for index in range(len(hashtable[0])):
-        if hashtable[0][index] == key:
-            found_address = index
-            return hashtable[1][found_address]
-            
+    start = hash_function(key, size)
+    collision_path[opNumber].append(start)
+    if hashtable[0][start] == key:
+        return hashtable[1][start]
     
-    return "Item not found"
+    address = collision_resolver(key, start, size)
+    while hashtable[0][address] != key and hashtable[0][address] != "#":
+        collision_path[opNumber].append(address)
+        if address == start:
+            break
+        address = collision_resolver(key,address,size)
+    
+    collision_path[opNumber].append(address)
+    statement = None
+    if  hashtable[0][address] == key:
+        statement = hashtable[1][address]
+        print ("Item found")
+    elif statement == None:
+        print ("Item not found")
+    
+    return statement 
+        
         
 def delete(hashtable, key, size,collision_path,opNumber): #returns hashtable, size, prints a msg  'Item Deleted'
-   for index in range(len(hashtable[0])):
-        if hashtable[0][index] == key:
-             hashtable[0][index] = "#"
-             print('Item Deleted')
-             break
-   for number in collision_path:
-       if number == opNumber:
-           for i in range(len( collision_path[number])):
-               if collision_path[number][i] == key:
-                   del collision_path[number][i]
-   return (hashtable, size)
+    address = hash_function(key, size)
+    if key not in hashtable[0]:
+        print ("Item not Deleted")
+        return (hashtable, size)
+    while hashtable[0][address] != key and hashtable[0][address] != None and hashtable[0][address] != "#":
+        collision_path[opNumber].append(address)
+        address = collision_resolver(key,address,size)
+    hashtable[0][address] = "#"
+    collision_path[opNumber].append(address)
+
+    loadfctr = loadFactor(hashtable, size)
+    if loadfctr > 0.75:
+       hashtable, size = resize_hashtable(hashtable,size,True)
+    elif loadfctr < 0.3 and size > 7:
+        hashtable, size =  resize_hashtable(hashtable,size,False)
+
+    print('Item Deleted')
+    return (hashtable, size)
+
+    
+  
 
 def is_prime(n):
     if n <= 1:
