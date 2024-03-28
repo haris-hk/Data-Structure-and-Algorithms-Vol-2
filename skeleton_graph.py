@@ -1,31 +1,20 @@
 import csv
-
-def addVertices(G: dict, vertices: list):
-    for val in vertices:
-        G[val] = []
-    return
-
-def addEdges(G: dict, edges: list):
-        for key in G:
-            for i in range(len(edges)):
-                for j in range(2):
-                    if edges[i][0] == key:
-                        G[key].append(edges[i][1])
                     
-
 def create_flight_network(filename: str, option: int):
     with open (filename) as f:
         lines = f. readlines ()
     input = []
     for line in lines :
         line = line . strip () # remove leading and trailing spaces
-        tokens = line . split () # split the line into tokens
-        input . append (tokens[0]) # add the first token to the input list
+        tokens = line . split (',') # split the line into tokens
+        input . append (tokens) # add the first token to the input list
     listinlst = []
     nodelst = []
     for values in input:
-        words = values.split(',')
-        listinlst.append(words)
+        listinlst.append(values)
+    # print("\n lisinlst")
+    # print()
+    # print(listinlst)
     for h in range(1, len(listinlst)):
         v = listinlst[h]
         if v[0] not in nodelst:
@@ -37,12 +26,12 @@ def create_flight_network(filename: str, option: int):
         for key in graph:
             for i in listinlst:
                 if key == i[0]:
-                    graph[key].append((i[1],i[2]))
+                    graph[key].append((i[1],int(i[2])))
     elif option == 2:
         for key in graph:
             for i in listinlst:
                 if key == i[0]:
-                    graph[key].append((i[1],i[3]))
+                    graph[key].append((i[1],int(i[3])))
             
  
     return graph
@@ -153,23 +142,45 @@ def remove_airport(graph: dict, city: str):
 
 
 def DFS_all_routes(graph: dict, origin: str, destination: str, route: list, all_routes: list):
-    pass
+    city = origin
+    route = route + [city]  # Append the current city to the route
+    
+    if city == destination:  # If we reached the destination
+        all_routes.append(route)  # Add the complete route to all_routes
+    else:
+        for neighbor in graph[city]:  # Iterate through neighbors of the current city
+            if neighbor[0] not in route:  # Check if neighbor is not already visited
+                DFS_all_routes(graph, neighbor[0], destination, route, all_routes)  # Recursive call with the neighbor
+    
+    return all_routes
 
 def find_all_routes(graph: dict, origin: str, destination: str):
-    pass
+    lst = []
+    all= []
+    routes = DFS_all_routes(graph, origin, destination, lst, all)
+    return routes
 
 def DFS_layovers(graph: dict, origin: str, destination: str,  route: list, layovers_lst: list):
     pass
 
 def find_number_of_layovers(graph: dict, origin: str, destination: str):
-    pass
+    lst = find_all_routes(graph, origin, destination)
+    num_of_layovers = []
+    for route in lst:
+        if len(route) <= 2:
+            num_of_layovers.append(0)
+        else:
+            num_of_layovers.append(len(route))
+    return num_of_layovers
 
-get_flight_connections(create_flight_network('flight_network.csv', 2), 'Dubai', "o")
+
 graph = create_flight_network('flight_network.csv', 2)
 print()
 
-#print(graph)
+print(graph)
 
-print()
-
-print(remove_airport(graph, 'Dubai'))
+# print()
+# print(find_number_of_layovers(graph, "Dubai", "Dubai"))
+# print()
+# print(find_all_routes(graph, "Dubai", "Chicago"))
+# print(remove_airport(graph, 'Dubai'))

@@ -1,18 +1,18 @@
-Origin_City,Destination_City,Duration,Distance
+Origin City,Destination City,Duration,Distance
 Dubai,Seattle,880,7400
 Seattle,Dubai,875,7453
 Seattle,Boston,320,2485
 Boston,Seattle,385,2496
 Seattle,Chicago,240,1721
 Chicago,Seattle,280,1733
-Dubai,San_Francisco,960,8103
-San_Francisco,Dubai,940,8079
-San_Francisco,Vancouver,150,805
-Vancouver,San_Francisco,145,800
-Dubai,Los_Angeles,980,8339
-Los_Angeles,Dubai,950,8316
-Los_Angeles,Washington,290,2294
-Washington,Los_Angeles,360,2311
+Dubai,San Francisco,960,8103
+San Francisco,Dubai,940,8079
+San Francisco,Vancouver,150,805
+Vancouver,San Francisco,145,800
+Dubai,Los Angeles,980,8339
+Los Angeles,Dubai,950,8316
+Los Angeles,Washington,290,2294
+Washington,Los Angeles,360,2311
 Chicago,Dubai,805,7233
 Dubai,Chicago,900,7246
 Chicago,Boston,135,867
@@ -37,12 +37,12 @@ Dubai,Orlando,965,7754
 Orlando,Dubai,850,7738
 Dubai,Miami,950,7845
 Miami,Dubai,855,7829
-Mexico_City,Barcelona,645,5900
+Mexico City,Barcelona,645,5900
 Barcelona,Dubai,385,3209
 Dubai,Barcelona,450,3221
-Barcelona,Mexico_City,770,5924
-London,Mexico_City,715,5550
-Mexico_City,London,615,5541
+Barcelona,Mexico City,770,5924
+London,Mexico City,715,5550
+Mexico City,London,615,5541
 London,Dubai,415,3400
 Dubai,London,475,3420
 Dubai,Toronto,855,6899
@@ -59,13 +59,13 @@ Toronto,Calgary,265,1683
 Calgary,Toronto,230,1675
 Calgary,Vancouver,100,419
 Vancouver,Calgary,105,428
-Dubai,Rio_de_Janeiro,890,7385
-Rio_de_Janeiro,Dubai,875,7376
-Dubai,Sao_Paulo,930,7597
-Sao_Paulo,Dubai,895,7592
-Sao_Paulo,Lima,315,2160
-Lima,Sao_Paulo,300,2147
-Rio_de_Janeiro,Buenos_Aires,200,1223
-Buenos_Aires,Rio_de_Janeiro,180,1222
-Mexico_City,Caracas,300,2234
-Caracas,Mexico_City,300,2224
+Dubai,Rio de Janeiro,890,7385
+Rio de Janeiro,Dubai,875,7376
+Dubai,Sao Paulo,930,7597
+Sao Paulo,Dubai,895,7592
+Sao Paulo,Lima,315,2160
+Lima,Sao Paulo,300,2147
+Rio de Janeiro,Buenos Aires,200,1223
+Buenos Aires,Rio de Janeiro,180,1222
+Mexico City,Caracas,300,2234
+Caracas,Mexico City,300,2224
