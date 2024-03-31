@@ -70,18 +70,22 @@ def get_flight_details(graph: dict, origin: str, destination: str) -> int:
 
 
 def add_flight(graph: dict, origin: str, destination: str, weight: int):
-    for key in graph:
-        if key == origin:
-            for city in range(len(graph[origin])) :
-                if graph[origin][city][0] == destination:
-                    graph[origin][city] = (destination, weight)
-                    
-                    return graph
-                else:
-                    graph[origin].append((destination, weight))
-                    return graph
-        
-    print ("the particular city not accessed by the flight network")
+    if destination not in graph or origin not in graph:
+        print("the particular city not accessed by the flight network")
+        return graph
+
+    if destination in graph:    
+        for key in graph:
+            if key == origin:
+                for city in range(len(graph[origin])) :
+                    print(graph[origin][city][0])
+                    if graph[origin][city][0] == destination:
+                        graph[origin][city] = (destination, weight)
+                        return graph
+                   
+    graph[origin].append((destination, weight))
+    return graph
+            
     
 
 def add_airport(graph: dict, city: str, destination: str, weight: int):
@@ -90,17 +94,17 @@ def add_airport(graph: dict, city: str, destination: str, weight: int):
     else:
         print("the airport already exists")
     return graph
+
+
 def get_secondary_flights(graph: dict, city: str):
-    flst = []
-    lst = get_flight_connections(graph, city, 'i')
+    nlst = []
+    if city not in graph:
+        return None
+    lst = graph[city]
     for cities in lst:
-        nlst = get_flight_connections(graph, cities, 'i')
-        for key in nlst:
-            if key not in flst:
-                if key != city:
-                    flst.append(key)
         
-    return flst
+        nlst = nlst + [key[0] for key in graph[cities[0]] if key[0] not in nlst]    
+    return nlst
 
 
 
@@ -119,11 +123,14 @@ def remove_flight(graph: dict, origin: str, destination: str):
     lst = []
     if origin not in graph or destination not in graph:
         print('the particular city not accessed by the flight network')
+        return graph
     hold = graph[origin]
     for key in hold:
         if key[0] != destination:
+            print(key)
             lst.append(key)
     graph[origin] = lst
+    graph[destination] = [flight for flight in graph[destination] if flight[0] != origin]
     return graph
 
 
@@ -155,24 +162,35 @@ def DFS_all_routes(graph: dict, origin: str, destination: str, route: list, all_
 def find_all_routes(graph: dict, origin: str, destination: str):
     lst = []
     all= []
+    if destination not in graph or origin not in graph:
+        return None
     routes = DFS_all_routes(graph, origin, destination, lst, all)
     if len(routes) == 1 and len(routes[0]) == 1:
         routes = []
     return routes
 
 def DFS_layovers(graph: dict, origin: str, destination: str,  route: list, layovers_lst: list):
-    pass
+    print("got the layovers?")
 
 def find_number_of_layovers(graph: dict, origin: str, destination: str):
-    lst = find_all_routes(graph, origin, destination)
+    dlst = []
+    flst = []
+    if destination not in graph or origin not in graph:
+        return None
+    lst = DFS_all_routes(graph, origin, destination, dlst, flst)
+    print (lst)
     num_of_layovers = []
     for route in lst:
-        if len(route) <= 2:
+        if len(route) == 2:
             num_of_layovers.append(0)
+        elif len(route) == 1:
+            return []
         else:
-            num_of_layovers.append(len(route))
+            num_of_layovers.append(len(route)-2)
     
     return sorted(num_of_layovers)
+
+
 
 
 
@@ -187,17 +205,21 @@ def find_number_of_layovers(graph: dict, origin: str, destination: str):
 # add_airport(G2, "Barcelona", "Mexico City", 5930)
 # dist = get_flight_details(G2, "Dubai", "Seattle")
 # print(dist)
-G1 = create_flight_network('flight_network.csv', 1)
-print("G1")
-print(G1)
-print()
+# G1 = create_flight_network('flight_network.csv', 1)
+# print("G1")
+# G = create_flight_network('flight_network.csv', 1)
+# print()
+# G2 = create_flight_network('flight_network.csv', 2)
+# print("G2")
+
+
+# print(find_number_of_layovers(G, "Mumbai", "Dubai"))
+# print()
+# print(find_number_of_layovers(G, "Dubai", "Seattle"))
+# print()
+# print(find_number_of_layovers(G, "Dubai", "Karachi"))
+G = create_flight_network('flight_network.csv', 1)
 G2 = create_flight_network('flight_network.csv', 2)
-print("G2")
-print()
-print(G2)
-print()
-print(add_flight(G1, "Dubai", "Vancouver", 950))
-print()
-print(add_flight(G1, "Toronto", "Los Angeles", 330))
-print()
-print(add_flight(G2, "Toronto", "Los Angeles", 2183))
+print(get_secondary_flights(G, "Karachi"))
+print(get_secondary_flights(G, "Dubai"))
+print(get_secondary_flights(G, "London"))
