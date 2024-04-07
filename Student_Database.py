@@ -31,7 +31,7 @@ def perform_Operations(H, operationFile):
         if lst[0] == 'Delete':   
             H, size = delete(H, lst[1], size, collision_path, iteration)
             iteration += 1
-    print(H)
+
     return collision_path
 
 
@@ -70,8 +70,9 @@ def main(filename):
 
 
 studentRecords=main('data.csv')
-print(studentRecords)
+# print(studentRecords)
 H = create_studentDatabase(studentRecords)
-print(perform_Operations(H, 'Operations.txt'))
+print(H)
+# print(perform_Operations(H, 'Operations.txt'))
 
 
